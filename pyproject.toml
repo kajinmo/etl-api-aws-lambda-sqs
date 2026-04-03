@@ -1,0 +1,7 @@
+[project]
+name = "etl-api-aws-lambda-sqs"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
