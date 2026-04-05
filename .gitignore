@@ -1,19 +1,25 @@
-# Python-generated files
+# Python
 __pycache__/
 *.py[oc]
 build/
 dist/
 wheels/
 *.egg-info
-
-# Virtual environments
 .venv
 
-# Ignored from Git
+# Terraform
+.terraform/
+**/*.tfstate
+**/*.tfstate.*
+*.tfstate.lock.info
+*.tfvars
+*.tfvars.json
+
+# AWS / Lambda Artifacts
+*.zip
+
+# Project Data
 *.json
 !data.json
 !silver_sample.json
-**/.terraform/*
-*.tfstate
-*.tfstate.backup
-*.zip
+!dashboard/data.json
