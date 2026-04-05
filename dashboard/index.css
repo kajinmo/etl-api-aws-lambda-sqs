@@ -1,0 +1,210 @@
+:root {
+    --bg-color: #0f111a;
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --accent-color: #00ffcc;
+    --text-primary: #ffffff;
+    --text-secondary: #94a3b8;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    overflow: hidden;
+    /* Adding a subtle background glow */
+    background-image: radial-gradient(circle at 50% -20%, #1a2342 0%, var(--bg-color) 60%);
+}
+
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 1rem;
+    box-sizing: border-box;
+    gap: 1rem;
+}
+
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* Header */
+header {
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    background: linear-gradient(90deg, #fff, var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.pulse {
+    box-shadow: 0 0 0 0 rgba(0, 255, 204, 0.7);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 255, 204, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(0, 255, 204, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 255, 204, 0); }
+}
+
+/* Main Grid */
+.main-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 1rem;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    overflow: hidden;
+}
+
+.sidebar h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 0.8rem;
+}
+
+.feed-container {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding-right: 0.5rem;
+}
+
+/* Custom Scrollbar for feed */
+.feed-container::-webkit-scrollbar {
+    width: 6px;
+}
+.feed-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+.feed-container::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 3px;
+}
+
+.feed-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    padding: 0.8rem;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.feed-card:hover {
+    transform: translateX(4px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(0, 255, 204, 0.3);
+}
+
+.feed-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.feed-type {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.feed-repo {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.feed-actor {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.feed-actor img {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+}
+
+/* Map Container */
+.map-container {
+    padding: 0.5rem;
+    display: flex;
+}
+
+#map {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    background-color: transparent;
+}
+
+/* Leaflet Dark Mode Overrides */
+.leaflet-popup-content-wrapper {
+    background: rgba(15, 17, 26, 0.9) !important;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 255, 204, 0.3);
+    color: var(--text-primary) !important;
+    border-radius: 8px;
+}
+.leaflet-popup-tip {
+    background: rgba(15, 17, 26, 0.9) !important;
+    border-top: 1px solid rgba(0, 255, 204, 0.3);
+    border-left: 1px solid rgba(0, 255, 204, 0.3);
+}
+.leaflet-container a {
+    color: var(--accent-color) !important;
+}

@@ -8,3 +8,12 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Ignored from Git
+*.json
+!data.json
+!silver_sample.json
+**/.terraform/*
+*.tfstate
+*.tfstate.backup
+*.zip
