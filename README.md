@@ -74,7 +74,19 @@ Below is the dictionary structure of the ingested data:
 *   Terraform `~> 5.0` installed.
 *   Python 3.12+ (with `uv` installed).
 
-### 2. Deploy Backend Infrastructure
+### 2. Secret Management (SSM)
+Before deploying the infrastructure, you must store your GitHub Personal Access Token in the **AWS Systems Manager (SSM) Parameter Store**. This keeps credentials out of the codebase.
+
+Run the following AWS CLI command to create the secure parameter:
+```bash
+aws ssm put-parameter \
+  --name "etl_github_token" \
+  --description "Token de leitura para buscar dados da API do GitHub" \
+  --type "SecureString" \
+  --value "<YOUR_GITHUB_TOKEN>"
+```
+
+### 3. Deploy Backend Infrastructure
 Sync your dependencies and generate the required dependency layer for AWS Lambda, then apply the Terraform stack to register roles, functions, triggers, and queues.
 ```bash
 uv sync

@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "etl_lambda_policy_doc" {
   statement {
     sid       = "AllowSSMParameterRead"
     actions   = ["ssm:GetParameter"]
-    resources = ["arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/etl_bronze_github_token"]
+    resources = ["arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/etl_github_token"]
   }
 
   # WRITE only to the S3 Bronze partition
@@ -76,7 +76,7 @@ data "aws_iam_policy_document" "etl_silver_policy_doc" {
   statement {
     sid       = "AllowSSMParameterRead"
     actions   = ["ssm:GetParameter"]
-    resources = ["arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/etl_bronze_github_token"]
+    resources = ["arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/etl_github_token"]
   }
 
   # SILVER MUST READ BRONZE
