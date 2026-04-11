@@ -3,16 +3,12 @@ import logging
 from pydantic import ValidationError
 
 # Isolated Modules
-from config import S3_BUCKET, SSM_PARAM_NAME, GITHUB_EVENTS_URL, logger
+from config import S3_BRONZE_BUCKET, SSM_PARAM_NAME, GITHUB_EVENTS_URL, logger
 from models import GithubEvent
 from services.aws_clients import get_ssm_token, load_bronze_layer_s3
 from services.github_api import fetch_public_events
 
 # --- Dispatch Function (Main) ---
-# How to translate this to Airflow?
-# This block is essentially the execution logic that would be handled by PythonOperators
-# strung together in a DAG file with dependency flows (e.g. task_A >> task_B).
-
 def lambda_handler(event, context):
     """Entry point triggered by AWS Lambda."""
     logger.info("--- [START] PIPELINE BRONZE GITHUB ---")
@@ -44,7 +40,7 @@ def lambda_handler(event, context):
         
         # Step 4: Loading the Lake (via AWS Service Module)
         if valid_events:
-            saved_key = load_bronze_layer_s3(valid_events, S3_BUCKET)
+            saved_key = load_bronze_layer_s3(valid_events, S3_BRONZE_BUCKET)
             message = "Batch loaded successfully into S3."
         else:
             message = "0 records validated. No load required."

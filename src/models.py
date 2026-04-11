@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Optional
-from typing import Dict, Any
+from pydantic import BaseModel
+from typing import Dict, Any, Optional
 
 # --- Pydantic Models (Typing and Validation Layer) ---
 class GithubActor(BaseModel):

@@ -49,3 +49,27 @@ def load_bronze_layer_s3(data: List[Dict[str, Any]], bucket: str) -> str:
     except ClientError as e:
         logger.error(f"Fatal AWS Error attempting to load S3: {e}")
         raise
+
+def read_json_from_s3(bucket: str, key: str) -> List[Dict[str, Any]]:
+    """Reads and parses a JSON file from S3."""
+    try:
+        response = s3_client.get_object(Bucket=bucket, Key=key)
+        file_content = response['Body'].read().decode('utf-8')
+        return json.loads(file_content)
+    except ClientError as e:
+        logger.error(f"Error accessing s3://{bucket}/{key}: {e}")
+        raise
+
+def load_silver_layer_s3(data: List[Dict[str, Any]], bucket: str, key: str) -> None:
+    """Loads transformed data into Silver S3 layer using the original object key."""
+    try:
+        s3_client.put_object(
+            Bucket=bucket,
+            Key=key,
+            Body=json.dumps(data, ensure_ascii=False),
+            ContentType="application/json"
+        )
+        logger.info(f"Saved enriched data to s3://{bucket}/{key}")
+    except ClientError as e:
+        logger.error(f"Failed to write to Silver Bucket: {e}")
+        raise

@@ -1,7 +1,7 @@
 # Step 1: Terraform zips the source code
 data "archive_file" "lambda_zip" {
   type        = "zip"
-  source_file = "${path.module}/../src/lambda_function.py"
+  source_dir  = "${path.module}/../src"
   output_path = "${path.module}/lambda.zip"
 }
 
@@ -66,14 +66,8 @@ resource "aws_lambda_permission" "allow_eventbridge_to_call_lambda" {
 # SILVER LAYER LAMBDA SETUP
 # ---------------------------------------------
 
-data "archive_file" "silver_lambda_zip" {
-  type        = "zip"
-  source_file = "${path.module}/../src/silver_lambda_function.py"
-  output_path = "${path.module}/silver_lambda.zip"
-}
-
 resource "aws_lambda_function" "etl_github_silver_enrichment" {
-  filename         = data.archive_file.silver_lambda_zip.output_path
+  filename         = data.archive_file.lambda_zip.output_path
   function_name    = "etl_github_events_silver_enricher"
   role             = aws_iam_role.etl_silver_lambda_role.arn
   handler          = "silver_lambda_function.lambda_handler"
@@ -83,7 +77,7 @@ resource "aws_lambda_function" "etl_github_silver_enrichment" {
   
   # RE-USE existing Pydantic + Requests layer! Cost optimized.
   layers           = [aws_lambda_layer_version.python_requirements_layer.arn]
-  source_code_hash = data.archive_file.silver_lambda_zip.output_base64sha256
+  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
 }
 
 # Permission to let the Bronze bucket trigger the Silver function
