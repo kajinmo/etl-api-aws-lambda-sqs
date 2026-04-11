@@ -27,7 +27,20 @@ graph TD
 4. **Resiliency (Amazon SQS):** A Dead Letter Queue (DLQ) captures execution payloads if the Lambda function fails repeatedly. Messages are kept for 14 days, preventing any data loss during unexpected crashes.
 5. **Storage (Amazon S3):** Retains raw JSON files separated natively using Hive partitioning structures (`year=YYYY/month=MM/day=DD/`). An explicit Lifecycle configuration automatically deletes objects older than 3 days, remaining comfortably within the Free Tier.
 
-### 2. Serving Layer & Visualization
+### 2. Processing & Enrichment Layer (Silver)
+1. **Trigger (S3 Event Notifications):** Automatically dispatches the Silver Lambda function as soon as the Bronze layer receives a file.
+2. **Compute (AWS Lambda):** Acts as an Orchestrator. It reads the raw JSON, queries the GitHub User API to fetch the geographic location of the event's actor, and enriches the dataset.
+3. **Caching Strategy:** Implements an ephemeral in-memory dictionary cache (`user_location_cache`) during execution to avoid API Rate Limiting from GitHub when users trigger multiple events simultaneously.
+
+### 3. Application Architecture (Python)
+The Lambda functions are built using a **Modular/Service-Oriented** architecture, strictly following the **DRY (Don't Repeat Yourself)** principle:
+*   **`config.py`**: Centralized Single Source of Truth for reading OS Environment Variables. Fails fast if required infrastructure variables are missing.
+*   **`models.py`**: Isolates Pydantic schema declarations to ensure rigid data quality rules before interacting with the Data Lake.
+*   **`services/aws_clients.py`**: Encapsulates all `boto3` interactions (S3 read/write, SSM parameter fetching).
+*   **`services/github_api.py`**: Dedicated module to handle all HTTP requests to external APIs, gracefully managing timeouts and HTTP exceptions.
+*   **Orchestrators (`lambda_function.py` and `silver_lambda_function.py`)**: The main handler functions are lean, merely importing the decoupled services and managing the flow of data.
+
+### 4. Serving Layer & Visualization
 The processed and enriched data feed a custom analytics dashboard that can be easily viewed locally. While this dashboard could be completely hosted and distributed globally via AWS (e.g., using S3 Static Hosting and CloudFront), we elected to run it locally to keep the project scope focused on core Data Engineering concepts rather than deep frontend web hosting infrastructure.
 
 ## Dataset Structure (GitHub Firehose)
@@ -47,6 +60,7 @@ Below is the dictionary structure of the ingested data:
 *   **Infrastructure as Code (IaC):** Terraform
 *   **Backend:** Python 3.12, AWS Lambda, Amazon EventBridge, Amazon SQS, Amazon S3, AWS SSM Parameter Store
 *   **Libraries (Python):** `boto3` (AWS SDK), `requests` (API Interaction), `pydantic` (Data Validation and Schema Enforcement)
+*   **Architectural Patterns:** Medallion Architecture (Bronze/Silver), Modularization, Service Dependency Injection, DRY, "Fail Fast" Environment Configurations.
 
  
 ## Security Standards
